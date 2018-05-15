@@ -88,6 +88,9 @@
 #include <inttypes.h>
 
 #include "p2v.h"
+#include "p2v_input_reader.h"
+#include "p2v_parameters.h"
+#include "p2v_chromosome.h"
 
 const int FIRST_SAMPLE_INDEX = 32; // index of first sample name
 
@@ -99,311 +102,45 @@ using std::cout;
 string g_versionString = "0.6.3";
 string g_programName = "pindel2vcf";
 
-bool g_normalBaseArray[256];
 int g_sizeToWarnFor = 1000000;
 
 bool pindel024uOrLater = false;
 
+/* the global parameter g_par stores the values of all parameters set by the user; the Parameter class, in contrast, is for user-friendly IO. */
+struct ParameterSettings {
+   std::string reference;
+   std::string referenceName;
+   std::string referenceDate;
+   std::string pindelfile;
+   std::string pindelroot;
+   std::string vcffile;
+   std::string chromosome;
+   int windowSize;
+   int MinCoverage;
+
+   double HetCutoff;
+   double HomCutoff;
+   int minsize;
+   int maxsize;
+   bool bothstrands;
+   int minsuppSamples;
+   int minsuppReads;
+   int maxSuppReads;
+   int regionStart;
+   int regionEnd;
+   int maxInterRepeatNo;
+   int maxInterRepeatLength;
+   int maxPostRepeatNo;
+   int maxPostRepeatLength;
+   bool onlyBalancedSamples;
+   int minimumStrandSupport;
+   int compactOutput;
+   bool showHelp;
+   bool somatic;
+   bool gatkCompatible;
+} g_par;
+
 /*** END OF PREFACE: include files and global constants ***/
-
-/** 'InputReader' can house a vector of files, allowing access as if it were one huge file. */
-class InputReader
-{
-
-public:
-   InputReader();
-
-   string getLine();
-   bool eof();
-   void addFile(const string filename);
-   void rewind();
-
-
-private:
-   vector<string> m_filenames;
-   int m_nextFileIndex;
-   bool m_readable;
-   ifstream m_currentFile;
-
-   bool canReadMore();
-   void moveToNextFile();
-};
-
-string InputReader::getLine()
-{
-   if (canReadMore()) {
-      string line;
-      getline( m_currentFile, line );
-      return line;
-   } else {
-      return "";
-   }
-}
-
-bool InputReader::canReadMore()
-{
-   // default case: current file is okay
-   if (m_currentFile && !m_currentFile.eof()) {
-      return true;
-   }
-
-   while (!m_currentFile || m_currentFile.eof()) {
-      moveToNextFile();
-      if (!m_readable) {
-         break;   // final EOF
-      }
-   }
-
-   return m_readable;
-}
-
-void InputReader::moveToNextFile()
-{
-   if (m_nextFileIndex<m_filenames.size()) {
-      m_currentFile.close();
-      m_currentFile.open( m_filenames[ m_nextFileIndex ].c_str() );
-      m_nextFileIndex++;
-   } else {
-      m_readable = false;
-   }
-}
-
-
-
-void InputReader::rewind()
-{
-   m_currentFile.open("");
-   m_nextFileIndex = 0;
-   m_readable = true;
-}
-
-InputReader::InputReader()
-{
-   rewind();
-}
-
-void InputReader::addFile(const string filename)
-{
-   m_filenames.push_back( filename );
-}
-
-bool InputReader::eof()
-{
-   return !canReadMore();
-}
-
-/* 'Parameter' stores an individual parameter; it is set by the command line parameters, and used by the program. */
-class Parameter
-{
-public:
-   bool isRequired() const
-   {
-      return d_required;
-   }
-   void describe() const;
-   string getDescription() const
-   {
-      return d_description;
-   }
-   string getShortName() const
-   {
-      return d_shortName;
-   }
-   string getLongName() const
-   {
-      return d_longName;
-   }
-   bool hasName( const string& name ) const
-   {
-      return ( d_shortName.compare(name) == 0 || d_longName.compare( name ) == 0 );
-   }
-   bool isSet() const
-   {
-      return d_isSet;
-   }
-   virtual void setValue(const string& value )
-   {
-      cout << "WHAT!" << endl ;
-   };
-   virtual void setValue(const int value) {};
-   virtual void setValue(const double value) {};
-   virtual void setValue(const bool value) {};
-   virtual int getIValue() const {};
-   virtual bool getBValue() const {};
-   virtual string getSValue() const {};
-   virtual double getFValue() const {};
-
-   virtual bool isUnary() const
-   {
-      return false;
-   }
-
-   Parameter( const string& shortName, const string& longName, const string& description, const bool required);
-protected:
-   void set()
-   {
-      d_isSet = true;
-      //cout << "setting " << d_shortName << endl;
-   }
-
-
-private:
-   bool d_required;
-   string d_shortName;
-   string d_longName;
-   string d_description;
-   bool d_isSet;
-};
-
-class IntParameter: public Parameter
-{
-public:
-   IntParameter( int* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const int value );
-
-   virtual int getIValue() const
-   {
-      return *d_data_ptr;
-   }
-   virtual void setValue(const string& value);
-   virtual void setValue(const int value);
-private:
-   int* d_data_ptr;
-};
-
-IntParameter::IntParameter( int* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const int value ) :
-   Parameter( shortName, longName, description, required ), d_data_ptr( par_ptr )
-{
-   *d_data_ptr = value;
-}
-
-void IntParameter::setValue(const string& value)
-{
-   setValue( atoi( value.c_str() ));
-}
-
-void IntParameter::setValue(const int value)
-{
-   *d_data_ptr = value;
-   set();
-}
-
-class BoolParameter: public Parameter
-{
-public:
-   BoolParameter( bool* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const bool value );
-
-   virtual bool getBValue() const
-   {
-      return *d_data_ptr;
-   }
-   virtual void setValue(const string& value);
-   virtual void setValue(const bool value);
-   virtual bool isUnary() const
-   {
-      return true;
-   }
-private:
-   bool* d_data_ptr;
-};
-
-BoolParameter::BoolParameter( bool* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const bool value ) :
-   Parameter( shortName, longName, description, required )
-{
-   d_data_ptr = par_ptr;
-   *d_data_ptr = value;
-}
-
-void BoolParameter::setValue(const string& value)
-{
-   char firstChar = tolower( value[0] );
-   setValue( ( firstChar == 'f' || firstChar == '0' ) ? false : true );
-}
-
-void BoolParameter::setValue(const bool value)
-{
-   *d_data_ptr = value;
-   set();
-}
-
-class FloatParameter: public Parameter
-{
-public:
-   FloatParameter( double* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const double value );
-
-   double getFValue() const
-   {
-      return *d_data_ptr;
-   }
-   void setValue(const string& value);
-   void setValue(const double value);
-private:
-   double* d_data_ptr;
-};
-
-FloatParameter::FloatParameter( double* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const double value ) :
-   Parameter( shortName, longName, description, required )
-{
-   d_data_ptr = par_ptr;
-   *d_data_ptr = value;
-}
-
-void FloatParameter::setValue(const string& value)
-{
-   setValue( atof( value.c_str() ));
-}
-
-void FloatParameter::setValue(const double value)
-{
-   *d_data_ptr = value;
-   set();
-}
-
-class StringParameter: public Parameter
-{
-public:
-   StringParameter( string* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const string& value );
-
-   string getSValue() const
-   {
-      return *d_data_ptr;
-   }
-   void setValue(const string& value);
-private:
-   string* d_data_ptr;
-};
-
-StringParameter::StringParameter( string* par_ptr, const string& shortName, const string& longName, const string& description, const bool required, const string& value ) :
-   Parameter( shortName, longName, description, required )
-{
-   d_data_ptr = par_ptr;
-   *d_data_ptr = value;
-}
-
-void StringParameter::setValue(const string& value)
-{
-   *d_data_ptr = value;
-   set();
-}
-
-
-
-Parameter::Parameter( const string& shortName, const string& longName, const string& description, const bool required )
-{
-   d_required = required;
-   d_shortName = shortName;
-   d_longName = longName;
-   d_description = description;
-   d_isSet = false;
-}
-
-void Parameter::describe() const
-{
-   cout << d_shortName << "/" << d_longName << "  " << d_description;
-   if ( d_required ) {
-      cout << ": required parameter" ;
-   }
-   cout << endl;
-}
 
 vector<Parameter*> parameters;
 
@@ -416,114 +153,6 @@ string convertToUppercase( const string& inputString)
    }
    return outputString;
 }
-
-bool normalBase(char ch )
-{
-   return g_normalBaseArray[ ch ];
-}
-
-void makeStrangeBasesN(string& dna)
-{
-   int chromLength = dna.size();
-   for (int position=0; position<chromLength; position++ ) {
-      if (!normalBase(dna[ position ])) {
-         dna[ position ] ='N';
-      }
-   }
-}
-
-/* 'Chromosome' contains a string identifier as well as the base sequence of the chromosome itself. */
-class Chromosome
-{
-public:
-   Chromosome(const string& identifier, const string& fastaFilename)
-   {
-      d_identifier = identifier;
-      d_sequence=NULL;
-      d_fastaFilename=fastaFilename;
-   }
-   ~Chromosome()
-   {
-      delete d_sequence;
-   }
-   const string* getChromPtr();
-   const string getID() const
-   {
-      return d_identifier;
-   }
-
-   void removeFromMemory()
-   {
-      cout << "Removing chromosome " << d_identifier << " from memory.\n";
-      delete d_sequence;
-      d_sequence=new string("");
-   }
-
-private:
-   void readFromFile();
-   string d_identifier;
-   string* d_sequence;
-   string d_fastaFilename;
-};
-
-/* 'Chromosome::readFromFile' reads in the reference chromosome sequence from the FASTA file. */
-void Chromosome::readFromFile()
-{
-   ifstream referenceFile( d_fastaFilename.c_str() );
-   referenceFile.clear(); // reset file for reading from the start again
-   referenceFile.seekg(0);
-   if (referenceFile.fail()) {
-      cout << "Cannot open reference file. Exiting.\n";
-      exit(EXIT_FAILURE);
-   }
-   string refLine, refName, currentLine;
-   string tempChromosome = "";
-
-   getline(referenceFile,refLine); // FASTA format always has a first line with the name of the reference in it
-   // loop over each chromosome
-   bool targetChromosomeRead = false;
-   do {
-      int counter=1;
-      refName = "";
-      do {
-         refName += refLine[ counter++ ];
-      } while ( counter<refLine.size() && (refLine[ counter ] != ' ') && (refLine[ counter ] != '\t') && (refLine[ counter ] != '\n') );
-
-      if (refName == d_identifier ) {
-         cout << "Reading chromosome " << refName << " into memory." << endl;
-         targetChromosomeRead = true;
-         tempChromosome+="N"; // for 1-shift
-      }
-      char ch;
-      referenceFile.get( ch );
-      while (!referenceFile.eof() && ch != '>') {
-         if (refName == d_identifier ) {
-            char niceCh = toupper( ch );
-            if (niceCh >='A' && niceCh<= 'Z' ) { // skip all spaces and tab stops etc.
-               tempChromosome += niceCh;
-            }
-         }
-         referenceFile.get( ch );
-      }
-      makeStrangeBasesN(tempChromosome);
-      d_sequence = new string( tempChromosome );
-      referenceFile.putback( ch );
-      getline(referenceFile,refLine); // FASTA format always has a first line with the name of the reference in it
-   } while (!referenceFile.eof() && !targetChromosomeRead);
-}
-
-const string* Chromosome::getChromPtr()
-{
-   if (d_sequence == NULL) { // sequence not read into memory
-      readFromFile();
-      //cout << "Have read " << d_sequence;
-   }
-   return d_sequence;
-}
-
-
-
-
 
 /* 'Genome' contains a collection of chromosomes, and returns a pointer to the requested chromosome (the chromosome with the requested ID) */
 class Genome
@@ -539,7 +168,6 @@ public:
 
    vector<Chromosome> d_chromosomes; // working fast here, but ideally I'd keep this private and implement an iterator
 };
-
 
 const string* Genome::getChromosome( const string& id )
 {
@@ -2017,18 +1645,6 @@ void makeSampleMap( const set<string>& sampleNames, map<string, int>& sampleMap 
    for (set<string>::iterator setIt=sampleNames.begin(); setIt!=sampleNames.end(); setIt++ ) {
       sampleMap.insert( pair<string,int>( *setIt, count++) );
    }
-}
-
-void initBaseArray()
-{
-   for (int i=0; i<256; i++) {
-      g_normalBaseArray[i] = false;
-   }
-   g_normalBaseArray['A'] = true;
-   g_normalBaseArray['C'] = true;
-   g_normalBaseArray['G'] = true;
-   g_normalBaseArray['T'] = true;
-   g_normalBaseArray['N'] = true;
 }
 
 void reportSVsInChromosome(
