@@ -144,16 +144,6 @@ struct ParameterSettings {
 
 vector<Parameter*> parameters;
 
-/** 'convertToUppercase' returns the input string in full uppercase. */
-string convertToUppercase( const string& inputString)
-{
-   string outputString = inputString;
-   for (int i=0; i<outputString.length(); i++ ) {
-      outputString[ i ] = toupper( outputString[ i ] );
-   }
-   return outputString;
-}
-
 /* 'Genome' contains a collection of chromosomes, and returns a pointer to the requested chromosome (the chromosome with the requested ID) */
 class Genome
 {
@@ -1164,9 +1154,6 @@ template<class T> void showVector( vector<T> vect )
    }
    cout << "End of printing.\n";
 }
-
-
-
 
 /* 'convertIndelToSVdata' converts insertions and deletions to nicely formatted SV-data. */
 void convertIndelToSVdata( InputReader& pindelInput, map< string, int>& sampleMap, Genome& genome, SVData& svd, const string& targetChromosomeID)
