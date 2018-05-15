@@ -1,5 +1,6 @@
 #include <string> 
 #include <iostream>
+#include "p2v.h"
 
 using std::string;
 using std::ios_base;
@@ -13,6 +14,7 @@ typedef string Segment;
 const int LINELENGTH = 60;
 
 /* returns the complementary DNA-base of base 'inputbase' */
+/*
 char complementBase( char inputBase ) {
    switch (inputBase) {
    case 'A':
@@ -27,8 +29,10 @@ char complementBase( char inputBase ) {
       return 'N';
    }
 }
+*/
 
 /* 'createComplement' creates the complement of a DNA string. */ // HEY!!! don't forget to complement CpG's properly!
+/*
 void createComplement( const string& dna, string& complement ) {
    int dnaLength = dna.length();
    complement = "";
@@ -36,6 +40,7 @@ void createComplement( const string& dna, string& complement ) {
       complement += complementBase( dna[ position ] );
    }
 }
+*/
 
 void print_revcomp(Header const& header, Segment const& seg, ostream& out = cout) {
     out << header << "\n";
