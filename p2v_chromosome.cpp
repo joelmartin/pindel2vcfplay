@@ -7,6 +7,7 @@ using std::string;
 using std::ifstream;
 using std::cout;
 using std::endl;
+using std::getline;
 
 bool g_normalBaseArray[256];
 
@@ -35,6 +36,16 @@ void initBaseArray()
    g_normalBaseArray['G'] = true;
    g_normalBaseArray['T'] = true;
    g_normalBaseArray['N'] = true;
+}
+
+/** 'convertToUppercase' returns the input string in full uppercase. */
+string convertToUppercase( const string& inputString)
+{
+   string outputString = inputString;
+   for (int i=0; i<outputString.length(); i++ ) {
+      outputString[ i ] = toupper( outputString[ i ] );
+   }
+   return outputString;
 }
 
 void Chromosome::removeFromMemory() {
@@ -70,21 +81,17 @@ void Chromosome::readFromFile()
          targetChromosomeRead = true;
          tempChromosome+="N"; // for 1-shift
       }
-      char ch;
-      referenceFile.get( ch );
-      while (!referenceFile.eof() && ch != '>') {
+      getline(referenceFile,currentLine);
+
+      while (!referenceFile.eof() && currentLine[0]!='>') {
          if (refName == d_identifier ) {
-            char niceCh = toupper( ch );
-            if (niceCh >='A' && niceCh<= 'Z' ) { // skip all spaces and tab stops etc.
-               tempChromosome += niceCh;
-            }
+            tempChromosome += convertToUppercase( currentLine );
          }
-         referenceFile.get( ch );
+         getline(referenceFile,currentLine);
       }
       makeStrangeBasesN(tempChromosome);
       d_sequence = new string( tempChromosome );
-      referenceFile.putback( ch );
-      getline(referenceFile,refLine); // FASTA format always has a first line with the name of the reference in it
+      refLine = currentLine;
    } while (!referenceFile.eof() && !targetChromosomeRead);
 }
 
