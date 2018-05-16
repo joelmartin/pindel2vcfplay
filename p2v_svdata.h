@@ -6,7 +6,7 @@
 #include <ostream>
 
 #include "p2v.h"
-#include "p2v_genotype.h"
+//#include "p2v_genotype.h"
 #include "p2v_genome.h"
 
 using std::ostream;
@@ -108,7 +108,7 @@ public:
 			//cout << "Warning: end position of the SV (" << d_end << ") appears to be before the startposition (" << d_position << "). Will adjust end to be startposition+reflen-1.\n";
 		}
 		else {}   // empty else.
-		return d_position+getReference().size()-1;
+		return int( d_position+getReference().size()-1 ); //explicitize.jam
 	}
 
 	void setHomlen(const int homlen) {

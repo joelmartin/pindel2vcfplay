@@ -215,6 +215,7 @@ private:
 
 ostream& operator<<(ostream& os, const Pair& pair) {
 	os << pair.d_first << "," << pair.d_second;
+    return os; //hack for xcode compiler.jam
 }
 
 // svdata was starting here
@@ -340,7 +341,7 @@ void getSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sam
 		if (elementsInLine> FIRST_SAMPLE_INDEX + 5* numberOfSamples ) {
 			pindel024uOrLater = true;
 		}
-		/*      else { //*** This code seems to give trouble with some pindel output; pindel output format not consistent?
+		/*      else { // *** This code seems to give trouble with some pindel output; pindel output format not consistent?
 		 pindel024uOrLater = false;
 		 }*/
 		int numberOfElementsPerSample = ( pindel024uOrLater ? 7 : 5 );

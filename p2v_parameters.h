@@ -37,10 +37,10 @@ public:
 	virtual void setValue(const int value) {};
 	virtual void setValue(const double value) {};
 	virtual void setValue(const bool value) {};
-	virtual int getIValue() const {};
-	virtual bool getBValue() const {};
-	virtual string getSValue() const {};
-	virtual double getFValue() const {};
+    virtual int getIValue() const {return 0;};
+    virtual bool getBValue() const {return false;};
+    virtual string getSValue() const {return "";};
+    virtual double getFValue() const {return 0;};
 
 	virtual bool isUnary() const {
 		return false;

@@ -93,7 +93,7 @@ string deriveGenotype( const Genotype& rawGenotype )
 	else if (AF >= getHomCutoff()) {
 		return "1/1";
 	}
-
+    return "ERROR_in_deriveGenotype";
 }
 
 const string Genotype::getGTold() const {
