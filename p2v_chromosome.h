@@ -1,3 +1,6 @@
+#ifndef P2V_CHROMOSOME_H
+#define P2V_CHROMOSOME_H
+
 #include <string>
 using std::string;
 
@@ -30,3 +33,4 @@ void initBaseArray();
 void makeStrangeBasesN(string& dna);
 bool normalBase(char ch );
 
+#endif
