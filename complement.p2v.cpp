@@ -79,12 +79,16 @@ int main (int argc, char **argv) {
 	map< string, int > fa_map;
 	string str_buf, line;
 	int    int_buf;
-	vector<string> tokens;
+	struct tokens {
+		string ctg;
+		int offset;
+		int trash;
+	};
+	tokens buffy;
+	//vector<string> tokens;
 
 	const string fa  = cl("fasta", "default");
 	const string ctg_id = cl( "ctg", "" );
-
-	cerr << ctg_id << endl;
 
 	const string fai = fa + ".fai";
 
@@ -92,37 +96,38 @@ int main (int argc, char **argv) {
 
 	if ( ! index_file.good() ) { 
 		cerr << "failed to open: " << fai << "\n";
+		exit(1);
 	}
 	else {
 		while ( getline( index_file, line ) ) { 
-			cerr << line << "\n";
 			stringstream ss(line);
-			ss >> str_buf;
-			ss >> int_buf;
-			ss >> int_buf;
-			fa_map.insert( make_pair( str_buf, int_buf ) );
+			ss >> buffy.ctg;
+			ss >> buffy.trash;
+			ss >> buffy.offset;
+			fa_map.insert( make_pair( buffy.ctg, buffy.offset ) );
 
 		}
-		
-	}
-	for( map<string,int>::iterator it = fa_map.begin(); it != fa_map.end(); ++it ) {
-		cerr << it->first << "\t" << it->second << "\n";
 	}
 
-	cerr << fa << "\n" << fai << "\n";
+	map<string,int>::iterator it = fa_map.find( ctg_id );
 
-  while (getline(cin, line)) {
-      if (line[0] == '>') {
-          if (! sequence.empty())
-          print_revcomp(header, sequence);
-          header = line;
-          sequence.clear();
-      }
-      else {
-          sequence += line;
-			}
+	if ( it == fa_map.end() ) { 
+		cerr << "not found: " << ctg_id << "\n";
+		exit( 1 );
+	}
+
+	fasta_file.open( fa, ifstream::in );
+
+	// if !c++11 or higher, need to fasta_file.clear() first in case eof was hit
+	fasta_file.seekg( it->second );
+
+  while (getline(fasta_file, line) && ! (line[0] == '>') ) {
+		sequence += line;
   }
-  print_revcomp(header, sequence);
+	if ( ! sequence.empty() ) { 
+		header = ">" + ctg_id;
+  	print_revcomp(header, sequence);
+	}
 
   return 0;
 }
