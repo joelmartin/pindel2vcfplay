@@ -1,3 +1,5 @@
+#include <sstream>
+#include <vector>
 #include <string> 
 #include <iostream>
 #include <fstream>
@@ -13,6 +15,11 @@ using std::cout;
 using std::cerr;
 using std::ifstream;
 using std::map;
+using std::stringstream;
+using std::vector;
+using std::make_pair;
+using std::endl;
+
 
 typedef string Header;
 typedef string Contig;
@@ -52,7 +59,7 @@ void print_revcomp(Header const& header, Contig const& seg, ostream& out = cout)
     out << header << "\n";
     
     Contig comp(seg.rbegin(),seg.rend());
-    //transform(comp.begin(),comp.end(), comp.begin(), complement);
+//  transform(comp.begin(),comp.end(), comp.begin(), complement);
 		createComplement( seg, comp );
 //	  out << comp << "\n";
     size_t i = 0;
@@ -61,13 +68,6 @@ void print_revcomp(Header const& header, Contig const& seg, ostream& out = cout)
     while(i < stop)
        out << comp.substr(i++*LINELENGTH,LINELENGTH) << "\n";
 }
-
-#include <sstream>
-#include <vector>
-
-using std::stringstream;
-using std::vector;
-using std::make_pair;
 
 int main (int argc, char **argv) {
   ios_base::sync_with_stdio(false);
@@ -82,6 +82,10 @@ int main (int argc, char **argv) {
 	vector<string> tokens;
 
 	const string fa  = cl("fasta", "default");
+	const string ctg_id = cl( "ctg", "" );
+
+	cerr << ctg_id << endl;
+
 	const string fai = fa + ".fai";
 
 	index_file.open( fai, ifstream::in );
@@ -98,26 +102,25 @@ int main (int argc, char **argv) {
 			ss >> int_buf;
 			fa_map.insert( make_pair( str_buf, int_buf ) );
 
-			//for( map<string,int>::iterator it = fa_map.begin(); it != fa_map.end(); ++it ) {
-			//	cerr << it->first << "\t" << it->second << "\n";
-			//}
 		}
 		
+	}
+	for( map<string,int>::iterator it = fa_map.begin(); it != fa_map.end(); ++it ) {
+		cerr << it->first << "\t" << it->second << "\n";
 	}
 
 	cerr << fa << "\n" << fai << "\n";
 
-  while (getline(cin, line))
-  {
-      if (line[0] == '>')
-      {
+  while (getline(cin, line)) {
+      if (line[0] == '>') {
           if (! sequence.empty())
           print_revcomp(header, sequence);
           header = line;
           sequence.clear();
       }
-      else
+      else {
           sequence += line;
+			}
   }
   print_revcomp(header, sequence);
 
