@@ -1,3 +1,11 @@
+# files for this project
+
+# uncompressed mini.fa.gz
+mini.fa
+
+# traces
+*.trace
+
 #########################
 # .gitignore file for Xcode4 and Xcode5 Source projects
 #
