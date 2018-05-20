@@ -296,7 +296,7 @@ void getSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sam
 		do {
 			line = pindelInput.getLine();
 		}
-		while (!pindelInput.eof() && !isSVSummarizingLine( line ));
+		while (!pindelInput.eof() && ! isdigit(line[0]) && !isSVSummarizingLine( line ));
 
 		if (pindelInput.eof()) {
 			//cout << "DEBUG:end GetSampleNamesAndChromosomeNames\n";
@@ -372,7 +372,7 @@ void convertIndelToSVdata( InputReader& pindelInput, map< string, int>& sampleMa
 	do {
 		line = pindelInput.getLine();
 	}
-	while (!pindelInput.eof() && !isSVSummarizingLine( line ));
+	while (!pindelInput.eof() && ! isdigit(line[0]) && !isSVSummarizingLine( line ));
 
 	if (pindelInput.eof()) {
 		return;
