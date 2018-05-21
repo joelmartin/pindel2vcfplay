@@ -10,7 +10,6 @@ using std::string;
 using std::vector;
 using std::ifstream;
 
-
 string InputReader::getLine() {
 	if (canReadMore()) {
 		string line;
@@ -48,8 +47,6 @@ void InputReader::moveToNextFile() {
 		m_readable = false;
 	}
 }
-
-
 
 void InputReader::rewind() {
 	m_currentFile.open("");

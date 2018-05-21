@@ -17,8 +17,6 @@ public:
 	void addChromosome( const Chromosome& chr ) {
 		d_chromosomes.push_back( chr );
 	}
-	string firstChromosomeName();
-	string nextChromosomeName();
 
 	vector<Chromosome> d_chromosomes; // working fast here, but ideally I'd keep this private and implement an iterator
 };

@@ -203,7 +203,6 @@ void read_fai( map<string, int> &fa_map, const string fai_name ) {
 	struct tokens {
 		string ctg;
 		int offset;
-		int trash;
 	};
 	tokens buffy;
 	ifstream index_file;
@@ -218,9 +217,7 @@ void read_fai( map<string, int> &fa_map, const string fai_name ) {
 	else {
 		while ( getline( index_file, line ) ) { 
 			stringstream ss(line);
-			ss >> buffy.ctg;
-			ss >> buffy.trash;
-			ss >> buffy.offset;
+            ss >> buffy.ctg, buffy.offset, buffy.offset;
 			fa_map.insert( make_pair( buffy.ctg, buffy.offset ) );
 		}
 	}

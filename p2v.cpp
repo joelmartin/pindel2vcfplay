@@ -568,44 +568,41 @@ void convertIndelToSVdata( InputReader& pindelInput, map< string, int>& sampleMa
 	}
 }
 
-/* 'readReference' reads in the reference. */
+/* 'readReference' reads in the reference ids. */
 void readReference( const string& referenceName, Genome& genome ) {
-	ifstream referenceFile( referenceName.c_str() );
-	if (referenceFile.fail()) {
-		cout << "Cannot open reference file. Exiting.\n";
-		exit(EXIT_FAILURE);
-	}
-	//reference="N"; // trick to make the reference automatically 1-positioned
-	string refLine, refName, currentLine;
-
-	getline(referenceFile,refLine); // FASTQ format always has a first line with the name of the reference in it
-	// loop over each chromosome
-	do {
-
-		int counter=1;
-		refName = "";
-		do {
-			refName += refLine[ counter++ ];
-		}
-		while ( counter<refLine.size() && (refLine[ counter ] != ' ') && (refLine[ counter ] != '\t') && (refLine[ counter ] != '\n') && (refLine[ counter ] != '\r'));
-		cout << "Scanning chromosome: " << refName << endl;
-		Chromosome newChrom( refName, referenceName );
-		getline(referenceFile,currentLine);
-		while (!referenceFile.eof() && currentLine[0]!='>') {
-			getline(referenceFile,currentLine);
-		}
-		genome.addChromosome( newChrom );
-		refLine = currentLine;
-	}
-	while (!referenceFile.eof());
-	//cout << "DEBUG:Exiting reference scanning.\n";
+    
+    ifstream referenceFile( referenceName.c_str() );
+    if ( referenceFile.fail() ) {
+        cout << "Cannot open reference file. Exiting.\n";
+        exit(EXIT_FAILURE);
+    }
+    
+    ifstream referenceFai;
+    referenceFai.open( referenceName + ".fai", ifstream::in );
+    if ( referenceFai.fail() ) {
+        cout << "Cannot open reference index file ( " <<referenceName + ".fai." << " Exiting\n";
+        exit(EXIT_FAILURE);
+    }
+    struct tokens {
+        string ctg;
+        int offset;
+    };
+    tokens buffy;
+    
+    string refLine, refName, currentLine;
+    while ( getline( referenceFai, refLine ) ) {
+        stringstream ss(refLine);
+        ss >> buffy.ctg >> buffy.offset >> buffy.offset;
+        Chromosome newChrom( buffy.ctg, referenceName, buffy.offset);
+        genome.addChromosome( newChrom );
+    }
 }
 
 
 /* 'createParameters' creates the default parameters that the VCF converter uses. */
 void createParameters() {
 	parameters.push_back(
-	  new StringParameter( &g_par.reference, "-r", "--reference", "The name of the file containing the reference genome", true, "" ) );
+	  new StringParameter( &g_par.reference, "-r", "--reference", "The name of the file containing the reference genome, must be fai indexed ( samtools faidx file.fa )", true, "" ) );
 	parameters.push_back(
 	  new StringParameter( &g_par.referenceName, "-R", "--reference_name", "The name and version of the reference genome", true, "" ) );
 	parameters.push_back(
