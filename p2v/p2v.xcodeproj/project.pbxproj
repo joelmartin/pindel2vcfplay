@@ -10,10 +10,12 @@
 		8702760320AC936A00F9EE8F /* p2v_genome.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 870275F720AC936900F9EE8F /* p2v_genome.cpp */; };
 		8702760420AC936A00F9EE8F /* p2v_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 870275FA20AC936900F9EE8F /* p2v_utils.cpp */; };
 		8702760520AC936A00F9EE8F /* p2v_svdata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 870275FB20AC936900F9EE8F /* p2v_svdata.cpp */; };
-		8702760620AC936A00F9EE8F /* p2v_input_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 870275FC20AC936900F9EE8F /* p2v_input_reader.cpp */; };
 		8702760820AC936A00F9EE8F /* p2v_chromosome.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 870275FF20AC936900F9EE8F /* p2v_chromosome.cpp */; };
 		8702760920AC936A00F9EE8F /* p2v_parameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8702760020AC936900F9EE8F /* p2v_parameters.cpp */; };
 		8702760A20AC936A00F9EE8F /* p2v.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8702760120AC936900F9EE8F /* p2v.cpp */; };
+		87F9356B20B20D02002D2B76 /* parse_tester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F9356A20B20D02002D2B76 /* parse_tester.cpp */; };
+		87F9357120B232DB002D2B76 /* p2v_input_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F9356F20B231B9002D2B76 /* p2v_input_reader.cpp */; };
+		87F9357420B23354002D2B76 /* p2v_input_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F9357320B23354002D2B76 /* p2v_input_reader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,27 +28,47 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		87F9356120B20CEF002D2B76 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		870275EB20AC920600F9EE8F /* p2v */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = p2v; sourceTree = BUILT_PRODUCTS_DIR; };
-		870275F520AC936900F9EE8F /* p2v_input_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v_input_reader.h; path = ../../p2v_input_reader.h; sourceTree = "<group>"; };
 		870275F620AC936900F9EE8F /* p2v_chromosome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v_chromosome.h; path = ../../p2v_chromosome.h; sourceTree = "<group>"; };
 		870275F720AC936900F9EE8F /* p2v_genome.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_genome.cpp; path = ../../p2v_genome.cpp; sourceTree = "<group>"; };
 		870275F820AC936900F9EE8F /* p2v_genome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v_genome.h; path = ../../p2v_genome.h; sourceTree = "<group>"; };
 		870275F920AC936900F9EE8F /* p2v_svdata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v_svdata.h; path = ../../p2v_svdata.h; sourceTree = "<group>"; };
 		870275FA20AC936900F9EE8F /* p2v_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_utils.cpp; path = ../../p2v_utils.cpp; sourceTree = "<group>"; };
 		870275FB20AC936900F9EE8F /* p2v_svdata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_svdata.cpp; path = ../../p2v_svdata.cpp; sourceTree = "<group>"; };
-		870275FC20AC936900F9EE8F /* p2v_input_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_input_reader.cpp; path = ../../p2v_input_reader.cpp; sourceTree = "<group>"; };
 		870275FE20AC936900F9EE8F /* p2v_parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v_parameters.h; path = ../../p2v_parameters.h; sourceTree = "<group>"; };
 		870275FF20AC936900F9EE8F /* p2v_chromosome.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_chromosome.cpp; path = ../../p2v_chromosome.cpp; sourceTree = "<group>"; };
 		8702760020AC936900F9EE8F /* p2v_parameters.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_parameters.cpp; path = ../../p2v_parameters.cpp; sourceTree = "<group>"; };
 		8702760120AC936900F9EE8F /* p2v.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v.cpp; path = ../../p2v.cpp; sourceTree = "<group>"; };
 		8702760220AC936A00F9EE8F /* p2v.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v.h; path = ../../p2v.h; sourceTree = "<group>"; };
+		87F9356320B20CEF002D2B76 /* ip */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ip; sourceTree = BUILT_PRODUCTS_DIR; };
+		87F9356A20B20D02002D2B76 /* parse_tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = parse_tester.cpp; path = ../../parse_tester.cpp; sourceTree = "<group>"; };
+		87F9356E20B231B9002D2B76 /* p2v_input_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = p2v_input_reader.h; sourceTree = "<group>"; };
+		87F9356F20B231B9002D2B76 /* p2v_input_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p2v_input_reader.cpp; sourceTree = "<group>"; };
+		87F9357220B23353002D2B76 /* p2v_input_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v_input_reader.h; path = ../../p2v_input_reader.h; sourceTree = "<group>"; };
+		87F9357320B23354002D2B76 /* p2v_input_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_input_reader.cpp; path = ../../p2v_input_reader.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		870275E820AC920600F9EE8F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		87F9356020B20CEF002D2B76 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -60,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				870275ED20AC920600F9EE8F /* p2v */,
+				87F9356420B20CEF002D2B76 /* ip */,
 				870275EC20AC920600F9EE8F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -68,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				870275EB20AC920600F9EE8F /* p2v */,
+				87F9356320B20CEF002D2B76 /* ip */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,11 +100,11 @@
 			isa = PBXGroup;
 			children = (
 				870275FF20AC936900F9EE8F /* p2v_chromosome.cpp */,
+				87F9357320B23354002D2B76 /* p2v_input_reader.cpp */,
+				87F9357220B23353002D2B76 /* p2v_input_reader.h */,
 				870275F620AC936900F9EE8F /* p2v_chromosome.h */,
 				870275F720AC936900F9EE8F /* p2v_genome.cpp */,
 				870275F820AC936900F9EE8F /* p2v_genome.h */,
-				870275FC20AC936900F9EE8F /* p2v_input_reader.cpp */,
-				870275F520AC936900F9EE8F /* p2v_input_reader.h */,
 				8702760020AC936900F9EE8F /* p2v_parameters.cpp */,
 				870275FE20AC936900F9EE8F /* p2v_parameters.h */,
 				870275FB20AC936900F9EE8F /* p2v_svdata.cpp */,
@@ -90,6 +114,16 @@
 				8702760220AC936A00F9EE8F /* p2v.h */,
 			);
 			path = p2v;
+			sourceTree = "<group>";
+		};
+		87F9356420B20CEF002D2B76 /* ip */ = {
+			isa = PBXGroup;
+			children = (
+				87F9356F20B231B9002D2B76 /* p2v_input_reader.cpp */,
+				87F9356E20B231B9002D2B76 /* p2v_input_reader.h */,
+				87F9356A20B20D02002D2B76 /* parse_tester.cpp */,
+			);
+			path = ip;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +146,23 @@
 			productReference = 870275EB20AC920600F9EE8F /* p2v */;
 			productType = "com.apple.product-type.tool";
 		};
+		87F9356220B20CEF002D2B76 /* ip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 87F9356920B20CEF002D2B76 /* Build configuration list for PBXNativeTarget "ip" */;
+			buildPhases = (
+				87F9355F20B20CEF002D2B76 /* Sources */,
+				87F9356020B20CEF002D2B76 /* Frameworks */,
+				87F9356120B20CEF002D2B76 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ip;
+			productName = ip;
+			productReference = 87F9356320B20CEF002D2B76 /* ip */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -122,6 +173,9 @@
 				ORGANIZATIONNAME = "Joel Martin";
 				TargetAttributes = {
 					870275EA20AC920600F9EE8F = {
+						CreatedOnToolsVersion = 9.3;
+					};
+					87F9356220B20CEF002D2B76 = {
 						CreatedOnToolsVersion = 9.3;
 					};
 				};
@@ -139,6 +193,7 @@
 			projectRoot = "";
 			targets = (
 				870275EA20AC920600F9EE8F /* p2v */,
+				87F9356220B20CEF002D2B76 /* ip */,
 			);
 		};
 /* End PBXProject section */
@@ -151,10 +206,19 @@
 				8702760A20AC936A00F9EE8F /* p2v.cpp in Sources */,
 				8702760820AC936A00F9EE8F /* p2v_chromosome.cpp in Sources */,
 				8702760420AC936A00F9EE8F /* p2v_utils.cpp in Sources */,
+				87F9357420B23354002D2B76 /* p2v_input_reader.cpp in Sources */,
 				8702760320AC936A00F9EE8F /* p2v_genome.cpp in Sources */,
-				8702760620AC936A00F9EE8F /* p2v_input_reader.cpp in Sources */,
 				8702760520AC936A00F9EE8F /* p2v_svdata.cpp in Sources */,
 				8702760920AC936A00F9EE8F /* p2v_parameters.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		87F9355F20B20CEF002D2B76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				87F9357120B232DB002D2B76 /* p2v_input_reader.cpp in Sources */,
+				87F9356B20B20D02002D2B76 /* parse_tester.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +350,22 @@
 			};
 			name = Release;
 		};
+		87F9356720B20CEF002D2B76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		87F9356820B20CEF002D2B76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -303,6 +383,15 @@
 			buildConfigurations = (
 				870275F320AC920600F9EE8F /* Debug */,
 				870275F420AC920600F9EE8F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		87F9356920B20CEF002D2B76 /* Build configuration list for PBXNativeTarget "ip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				87F9356720B20CEF002D2B76 /* Debug */,
+				87F9356820B20CEF002D2B76 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
