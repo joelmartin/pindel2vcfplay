@@ -13,6 +13,7 @@
 using std::string;
 using std::ios_base;
 using std::ifstream;
+using std::ofstream;
 using std::istream;
 using std::ostream;
 using std::cin;
@@ -25,17 +26,38 @@ using std::vector;
 using std::make_pair;
 using std::endl;
 
+struct fai_s {
+	int offset;
+	int length;
+};
+
 void read_fai( map<string, int> &fa_map, const string fai_name );
+void read_fai2( map<string, fai_s> &fa_map, vector <string> &allChromosomeNames, const string fai_name );
 bool isPindelSVIdentifier( string identifier );
 bool isSVSummarizingLine( string line );
 string fetchElement( istream& instream, const int index );
 int countElements( istream& instream );
-void parse_to_just_type(InputReader& pindelInput, set<string>& sampleNames, set<string>& chromosomeNames );
-
+void GetSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sampleNames, set<string>& chromosomeNames );
+void convertIndelToSVdata( InputReader& pindelInput, const string& targetChromosomeID, ofstream& debug);
+void reportSVsInChromosome( const string& chromosomeID, const set<string>& chromosomeNames, const set<string>& sampleNames,InputReader& pindelInput, map<string,fai_s>& fai_map, ofstream& debug);
+//rootFilename, chromosomeNames, sampleNames, pindelInput, fai_map );
 const int FIRST_SAMPLE_INDEX = 32;
 
 int PARSE_BEEN_CALLED = 0;
 
+/*struct fai {
+	fai() : offset(0), length(0) {}
+	fai(int newOffset, int newLength)
+	: offset(newOffset), length(newLength) {}
+ 
+	int offset;
+	int length;
+ };*/
+
+
+//int main() {
+//categories[1] = category(1, "First category");
+//	categories[2] = category(2, "Second category");
 
 int main (int argc, char **argv) {
   ios_base::sync_with_stdio(false);
@@ -44,47 +66,126 @@ int main (int argc, char **argv) {
 
 	// fasta=whatever.fa
 	// ctg=scaffold_8366
-    // pindel=/Users/j_martin/?
-    
-	ifstream index_file, fasta_file;
+  // pindel=/Users/j_martin/?
+	string debug_name = "debug.out";
+	ofstream debug(debug_name);
+	if ( ! debug.good() ) {
+		cerr << "failed to open: " << debug_name;
+		exit( 1 );
+	}
+	
 	map< string, int > fa_map;
+	map< string, fai_s > fai_map;
+	vector <string> allChromosomeNames;
 
 	const string fa  = cl("fasta", "default");
 	const string ctg_id = cl( "ctg", "" );
 	const string fai = fa + ".fai";
-    const int    jobs = cl("jobs",10000);
+	const int    jobs = cl("jobs",10000);
     
 	read_fai( fa_map, fai );
+	read_fai2( fai_map, allChromosomeNames, fai);
 	map<string,int>::iterator it = fa_map.find( ctg_id );
+	map<string,fai_s>::iterator it2 = fai_map.find(ctg_id);
+	if ( it2 == fai_map.end()){
+		cerr << "not found: " << ctg_id << "\n";
+		exit( 1 );
+	}
 	if ( it == fa_map.end() ) {
 		cerr << "not found: " << ctg_id << "\n";
 		exit( 1 );
 	}
+	cerr << "found: " << ctg_id << " length: " << it2->second.length << " offset: " << it2->second.offset << endl;
 /* testing parsing */
-    const string rootFilename = cl("pindel","");
-    InputReader pindelInput;
-    set<string> sampleNames;
-    set<string> chromosomeNames;
+	const string rootFilename = cl("pindel","");
+  InputReader pindelInput;
+  set<string> sampleNames;
+  set<string> chromosomeNames;
 
-    pindelInput.addFile( rootFilename + "_D");
-    pindelInput.addFile( rootFilename + "_SI");
-    pindelInput.addFile( rootFilename + "_LI");
-    pindelInput.addFile( rootFilename + "_INV");
-    pindelInput.addFile( rootFilename + "_TD");
-    if (pindelInput.eof()) {
-        cout << "The pindel file (-p) does not exist.\n";
-        exit( EXIT_FAILURE );
-    }
-    //cout<< "Samples0:\n";
-    //showSet( sampleNames );
-    for( int i = 0; i< jobs; i++)
-        parse_to_just_type(pindelInput,sampleNames,chromosomeNames);
-    cout << "done: " << PARSE_BEEN_CALLED << endl;
+  pindelInput.addFile( rootFilename + "_D");
+  pindelInput.addFile( rootFilename + "_SI");
+  pindelInput.addFile( rootFilename + "_LI");
+  pindelInput.addFile( rootFilename + "_INV");
+  pindelInput.addFile( rootFilename + "_TD");
+  if (pindelInput.eof()) {
+      cout << "The pindel file (-p) does not exist.\n";
+      exit( EXIT_FAILURE );
+  }
+  GetSampleNamesAndChromosomeNames(pindelInput,sampleNames,chromosomeNames);
+  cerr << "parse called: " << PARSE_BEEN_CALLED << endl;
+  cerr << "movedtos: " << pindelInput.md_moved_to_next_file << endl;
+  cerr << "rewounds: " << pindelInput.md_rewound << endl;
+  cerr << "openeds:  " << pindelInput.md_opened << endl;
+  cerr << "gotlines: " << pindelInput.md_gotline << endl;
+	
+/*	for ( set<string>::iterator it=chromosomeNames.begin(); it!=chromosomeNames.end(); ++it ) {  //oops ordered
+			reportSVsInChromosome( *it, chromosomeNames, sampleNames, pindelInput, fai_map, debug );
+	}
+ */
+	for ( vector<string>::iterator it=allChromosomeNames.begin(); it!=allChromosomeNames.end(); ++it ) {  //oops ordered
+		reportSVsInChromosome( *it, chromosomeNames, sampleNames, pindelInput, fai_map, debug );
+	}
+	cerr << "parse called: " << PARSE_BEEN_CALLED << endl;
+	cerr << "movedtos: " << pindelInput.md_moved_to_next_file << endl;
+	cerr << "rewounds: " << pindelInput.md_rewound << endl;
+	cerr << "openeds:  " << pindelInput.md_opened << endl;
+	cerr << "gotlines: " << pindelInput.md_gotline << endl;
 
   return 0;
 }
 
-void parse_to_just_type(InputReader& pindelInput, set<string>& sampleNames, set<string>& chromosomeNames ) {
+void convertIndelToSVdata( InputReader& pindelInput, const string& targetChromosomeID, ofstream& debug) {
+	string line;
+	do {
+		line = pindelInput.getLine();
+	}
+	while (!pindelInput.eof() && (! isdigit(line[0]) || !isSVSummarizingLine( line )));
+	
+	if (pindelInput.eof()) {
+		return;
+	}
+	// at this point have a summarizing line
+	// in a perfect world file will end up with one line for every item.
+	debug << line << "\n";
+	// does a lot of stuff with that line here
+}
+
+
+void reportSVsInChromosome( const string& chromosomeID,
+							const set<string>& chromosomeNames,
+							const set<string>& sampleNames,
+						  InputReader& pindelInput,
+							map<string,fai_s>& fai_map,
+							ofstream& debug
+		){
+		// if no reads have been found for this chromosome, skip it
+		if (chromosomeNames.find(chromosomeID) == chromosomeNames.end() ) {
+			cout << "No reads for chromosome " << chromosomeID << ", skipping it.\n";
+			return;
+		}
+		cout << "Processing chromosome " << chromosomeID << endl;
+		// rewind file to start
+		int regionStart = 0;
+		int regionEnd = 0;
+		map<string,fai_s>::iterator fai_map_it = fai_map.find( chromosomeID ); // always found as it also built chromosomeNames
+	
+		do {
+			cout << "reportSVsInChromosome: start reading region.\n";
+			regionEnd = regionStart + 300*1000000;
+			cout << "Reading region " << regionStart << "-" << regionEnd << endl;
+			pindelInput.rewind(); // change to go to last position read?
+			int counter=0;
+			while (!pindelInput.eof()) {
+				convertIndelToSVdata( pindelInput, chromosomeID, debug);
+				counter++;
+				//if (counter%10==0) cout << "At counter " << counter << " pos " << svd.getPosition() << endl;
+			}
+			regionStart += (300*1000000);
+		//} while ( !regionEnd<genome.getChromosome( chromosomeID )->size());
+		} while ( regionEnd < fai_map_it->second.length );
+}
+
+void GetSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sampleNames, set<string>& chromosomeNames ) {
     //cout << "DEBUG:start GetSampleNamesAndChromosomeNames\n";
     string line;
     unsigned int counter=0;
@@ -118,6 +219,27 @@ void parse_to_just_type(InputReader& pindelInput, set<string>& sampleNames, set<
         streamForCounting << line;
         int elementsInLine = countElements( streamForCounting );
         string svType = fetchElement( lineStream, 2 );
+			
+			// 'LI' types don't have the same format as normal Pindel lines.
+			if ( svType.compare("LI")==0 ) {
+				string chromosomeName = fetchElement( lineStream, 2 );
+				chromosomeNames.insert( chromosomeName );
+				string firstSampleName = fetchElement( lineStream, 7);
+				sampleNames.insert( firstSampleName );
+				string newSampleName = fetchElement( lineStream, 5 );
+				while (!lineStream.fail()) {
+					sampleNames.insert( newSampleName );
+					newSampleName = fetchElement( lineStream, 5 );
+				}
+				continue;
+			}
+			string chromosomeName = fetchElement( lineStream, 6 );
+			chromosomeNames.insert( chromosomeName );
+			//		cout << "Studying chromosome " << chromosome << endl;
+			
+			// 8 = 2+6, so corrects for previous reads
+
+			
         int numberOfSamples = atoi( fetchElement( lineStream, FIRST_SAMPLE_INDEX - 12 ).c_str() );
         string firstSampleName = fetchElement( lineStream, 4 );
         if ( firstSampleName != "" ) {
@@ -197,11 +319,44 @@ int countElements( istream& instream ) {
     }
     return counter;
 }
+void read_fai2( map<string, fai_s> &fa_map, vector<string>& allChromosomeNames, const string fai_name ) {
+	struct tokens {
+		string ctg;
+		int length;
+		int offset;
+	};
+	fai_s fai_struct;
+	tokens buffy;
+	ifstream index_file;
+	string line;
+	
+	index_file.open( fai_name, ifstream::in );
+	
+	if ( ! index_file.good() ) {
+		cerr << "failed to open: " << fai_name << "\n";
+		exit(1);
+	}
+	else {
+		while ( getline( index_file, line ) ) {
+			stringstream ss(line);
+			ss >> buffy.ctg;
+			ss >> fai_struct.length;
+			ss >> fai_struct.offset;
+			//fai_struct.length = buffy.length;
+			//fai_struct.offset = buffy.offset;
+			
+			allChromosomeNames.push_back(buffy.ctg);
+			fa_map.insert( make_pair( buffy.ctg, fai_struct ) );
+		}
+	}
+}
+
 // read fai and fill map
 
 void read_fai( map<string, int> &fa_map, const string fai_name ) {
 	struct tokens {
 		string ctg;
+		int length;
 		int offset;
 	};
 	tokens buffy;
@@ -217,7 +372,9 @@ void read_fai( map<string, int> &fa_map, const string fai_name ) {
 	else {
 		while ( getline( index_file, line ) ) { 
 			stringstream ss(line);
-            ss >> buffy.ctg, buffy.offset, buffy.offset;
+			ss >> buffy.ctg;
+			ss >> buffy.length;
+            ss >> buffy.offset;
 			fa_map.insert( make_pair( buffy.ctg, buffy.offset ) );
 		}
 	}

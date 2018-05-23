@@ -17,14 +17,21 @@ public:
 	bool eof();
 	void addFile(const string filename);
 	void rewind();
-
+	//profiling cruft
+  int md_moved_to_next_file = 0;
+  int md_rewound = 0;
+  int md_opened = 0;
+  int md_gotline = 0;
+    
 private:
 	vector<string> m_filenames;
+	vector<int>    m_positions;
 	int m_nextFileIndex;
 	bool m_readable;
 	ifstream m_currentFile;
 	bool canReadMore();
 	void moveToNextFile();
+
 };
 
 #endif

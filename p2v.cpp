@@ -584,16 +584,19 @@ void readReference( const string& referenceName, Genome& genome ) {
         exit(EXIT_FAILURE);
     }
     struct tokens {
-        string ctg;
-        int offset;
+    	string ctg;
+			int length;
+			int offset;
     };
     tokens buffy;
     
     string refLine, refName, currentLine;
     while ( getline( referenceFai, refLine ) ) {
         stringstream ss(refLine);
-        ss >> buffy.ctg >> buffy.offset >> buffy.offset;
-        Chromosome newChrom( buffy.ctg, referenceName, buffy.offset);
+				ss >> buffy.ctg;
+				ss >> buffy.length;
+				ss >> buffy.offset;
+        Chromosome newChrom( buffy.ctg, referenceName, buffy.length, buffy.offset);
         genome.addChromosome( newChrom );
     }
 }

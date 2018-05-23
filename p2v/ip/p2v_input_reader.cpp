@@ -10,8 +10,8 @@ using std::string;
 using std::vector;
 using std::ifstream;
 
-
 string InputReader::getLine() {
+	md_gotline++;
 	if (canReadMore()) {
 		string line;
 		getline( m_currentFile, line );
@@ -39,22 +39,23 @@ bool InputReader::canReadMore() {
 }
 
 void InputReader::moveToNextFile() {
+    md_moved_to_next_file++;
 	if (m_nextFileIndex<m_filenames.size()) {
 		m_currentFile.close();
 		m_currentFile.open( m_filenames[ m_nextFileIndex ].c_str() );
 		m_nextFileIndex++;
+    md_opened++;
 	}
 	else {
 		m_readable = false;
 	}
 }
 
-
-
 void InputReader::rewind() {
 	m_currentFile.open("");
 	m_nextFileIndex = 0;
 	m_readable = true;
+	md_rewound++;
 }
 
 InputReader::InputReader() {
@@ -63,6 +64,7 @@ InputReader::InputReader() {
 
 void InputReader::addFile(const string filename) {
 	m_filenames.push_back( filename );
+	m_positions.push_back( 0 );
 }
 
 bool InputReader::eof() {

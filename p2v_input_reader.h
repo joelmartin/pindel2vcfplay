@@ -17,7 +17,12 @@ public:
 	bool eof();
 	void addFile(const string filename);
 	void rewind();
-
+	
+  int md_moved_to_next_file = 0;
+  int md_rewound = 0;
+  int md_opened = 0;
+  int md_gotline = 0;
+    
 private:
 	vector<string> m_filenames;
 	int m_nextFileIndex;
@@ -25,6 +30,7 @@ private:
 	ifstream m_currentFile;
 	bool canReadMore();
 	void moveToNextFile();
+
 };
 
 #endif
