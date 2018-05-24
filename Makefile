@@ -14,7 +14,7 @@ CC = g++
 #	$(CC) $(CFLAGS) $< -o $@
 
 p2v: p2v_utils.o p2v_input_reader.o p2v.o p2v_parameters.o p2v_chromosome.o p2v_genome.o p2v_svdata.o
-	$(CC) $(LDFLAGS) -o p2v p2v_utils.o p2v_input_reader.o p2v.o p2v_parameters.o p2v_chromosome.o p2v_genome.o p2v_svdata.o
+	$(CC) $(LDFLAGS) -o p2vbin p2v_utils.o p2v_input_reader.o p2v.o p2v_parameters.o p2v_chromosome.o p2v_genome.o p2v_svdata.o
 
 p2v_input_reader.o: p2v_input_reader.cpp
 	$(CC) $(CFLAGS) -c p2v_input_reader.cpp
