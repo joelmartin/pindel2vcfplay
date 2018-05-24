@@ -27,6 +27,7 @@ private:
 	vector<string> m_filenames;
 	vector<int>    m_positions;
 	int m_nextFileIndex;
+	int m_curFileIndex;
 	bool m_readable;
 	ifstream m_currentFile;
 	bool canReadMore();

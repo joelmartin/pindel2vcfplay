@@ -39,7 +39,8 @@ bool InputReader::canReadMore() {
 }
 
 void InputReader::moveToNextFile() {
-    md_moved_to_next_file++;
+  md_moved_to_next_file++;
+	m_curFileIndex = m_nextFileIndex;
 	if (m_nextFileIndex<m_filenames.size()) {
 		m_currentFile.close();
 		m_currentFile.open( m_filenames[ m_nextFileIndex ].c_str() );
@@ -54,6 +55,7 @@ void InputReader::moveToNextFile() {
 void InputReader::rewind() {
 	m_currentFile.open("");
 	m_nextFileIndex = 0;
+	m_curFileIndex  = 0;
 	m_readable = true;
 	md_rewound++;
 }
