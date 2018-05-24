@@ -13,8 +13,6 @@ using std::ifstream;
 using std::make_pair;
 //using std::pair;
 using std::find;
-using std::shared_ptr;
-using std::make_shared;
 
 string InputReader::getLine() {
 	md_gotline++;

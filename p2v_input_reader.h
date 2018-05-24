@@ -12,7 +12,6 @@ using std::vector;
 using std::map;
 using std::pair;
 using std::ifstream;
-using std::shared_ptr;
 
 typedef std::map<string, int> chrPos;  // Contig_Name, offset
 typedef std::vector<chrPos>  filemaps;
@@ -43,7 +42,7 @@ private:
 	filemaps m_positions;
 	int m_nextFileIndex;
 	int m_currentFileIndex;
-	fpos_t m_prevPos;               // position before current line was read.
+	int m_prevPos;               // position before current line was read.
 	bool m_readable;
 	ifstream m_currentFile;
 	bool canReadMore();
