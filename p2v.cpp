@@ -317,6 +317,9 @@ void getSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sam
 		if ( svType.compare("LI")==0 ) {
 			string chromosomeName = fetchElement( lineStream, 2 );
 			chromosomeNames.insert( chromosomeName );
+			if ( ! pindelInput.chrSeenInFile(chromosomeName) ) {
+				pindelInput.addChrPos(chromosomeName);
+			}
 			string firstSampleName = fetchElement( lineStream, 7);
 			sampleNames.insert( firstSampleName );
 			string newSampleName = fetchElement( lineStream, 5 );
@@ -328,6 +331,9 @@ void getSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sam
 		}
 		string chromosomeName = fetchElement( lineStream, 6 );
 		chromosomeNames.insert( chromosomeName );
+		if ( ! pindelInput.chrSeenInFile(chromosomeName) ) {
+			pindelInput.addChrPos(chromosomeName);
+		}
 		//		cout << "Studying chromosome " << chromosome << endl;
 
 		// 8 = 2+6, so corrects for previous reads
@@ -392,6 +398,7 @@ void convertIndelToSVdata( InputReader& pindelInput, map< string, int>& sampleMa
 		}
 		svd.setChromosome( chromosomeID );
 		if (chromosomeID!=targetChromosomeID) {
+			pindelInput.pastCID();
 			return;
 		}
 		int beforeStartPos = atoi( fetchElement( lineStream, 1 ).c_str() );
@@ -482,6 +489,7 @@ void convertIndelToSVdata( InputReader& pindelInput, map< string, int>& sampleMa
 
 	string chromosomeID = fetchElement( lineStream, 2); // now at position 8
 	if (chromosomeID!=targetChromosomeID) {
+		pindelInput.pastCID();
 		return;
 	}
 	const string* reference = genome.getChromosome( chromosomeID );
@@ -862,6 +870,7 @@ void reportSVsInChromosome(
 	int regionEnd = 0;
 	SVData backupSV(sampleNames.size() );
 	bool backupAvailable = false;
+	pindelInput.setChrTarget( chromosomeID);
 	do {
 		cout << "reportSVsInChromosome: start reading region.\n";
 		regionEnd = regionStart + g_par.windowSize*1000000;
