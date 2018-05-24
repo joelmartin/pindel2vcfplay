@@ -6,6 +6,8 @@ mini.fa
 # traces
 *.trace
 
+*.o
+
 #########################
 # .gitignore file for Xcode4 and Xcode5 Source projects
 #
