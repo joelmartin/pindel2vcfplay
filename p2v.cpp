@@ -317,6 +317,9 @@ void getSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sam
 		if ( svType.compare("LI")==0 ) {
 			string chromosomeName = fetchElement( lineStream, 2 );
 			chromosomeNames.insert( chromosomeName );
+			if ( ! pindelInput.chrSeenInFile(chromosomeName) ) {
+				pindelInput.addChrPos(chromosomeName);
+			}
 			string firstSampleName = fetchElement( lineStream, 7);
 			sampleNames.insert( firstSampleName );
 			string newSampleName = fetchElement( lineStream, 5 );
@@ -328,6 +331,9 @@ void getSampleNamesAndChromosomeNames(InputReader& pindelInput, set<string>& sam
 		}
 		string chromosomeName = fetchElement( lineStream, 6 );
 		chromosomeNames.insert( chromosomeName );
+		if ( ! pindelInput.chrSeenInFile(chromosomeName) ) {
+			pindelInput.addChrPos(chromosomeName);
+		}
 		//		cout << "Studying chromosome " << chromosome << endl;
 
 		// 8 = 2+6, so corrects for previous reads
@@ -392,6 +398,7 @@ void convertIndelToSVdata( InputReader& pindelInput, map< string, int>& sampleMa
 		}
 		svd.setChromosome( chromosomeID );
 		if (chromosomeID!=targetChromosomeID) {
+			pindelInput.pastCID();
 			return;
 		}
 		int beforeStartPos = atoi( fetchElement( lineStream, 1 ).c_str() );
@@ -482,6 +489,7 @@ void convertIndelToSVdata( InputReader& pindelInput, map< string, int>& sampleMa
 
 	string chromosomeID = fetchElement( lineStream, 2); // now at position 8
 	if (chromosomeID!=targetChromosomeID) {
+		pindelInput.pastCID();
 		return;
 	}
 	const string* reference = genome.getChromosome( chromosomeID );
@@ -584,16 +592,19 @@ void readReference( const string& referenceName, Genome& genome ) {
         exit(EXIT_FAILURE);
     }
     struct tokens {
-        string ctg;
-        int offset;
+    	string ctg;
+			int length;
+			int offset;
     };
     tokens buffy;
     
     string refLine, refName, currentLine;
     while ( getline( referenceFai, refLine ) ) {
         stringstream ss(refLine);
-        ss >> buffy.ctg >> buffy.offset >> buffy.offset;
-        Chromosome newChrom( buffy.ctg, referenceName, buffy.offset);
+				ss >> buffy.ctg;
+				ss >> buffy.length;
+				ss >> buffy.offset;
+        Chromosome newChrom( buffy.ctg, referenceName, buffy.length, buffy.offset);
         genome.addChromosome( newChrom );
     }
 }
@@ -859,6 +870,7 @@ void reportSVsInChromosome(
 	int regionEnd = 0;
 	SVData backupSV(sampleNames.size() );
 	bool backupAvailable = false;
+	pindelInput.setChrTarget( chromosomeID);
 	do {
 		cout << "reportSVsInChromosome: start reading region.\n";
 		regionEnd = regionStart + g_par.windowSize*1000000;

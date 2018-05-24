@@ -14,8 +14,8 @@
 		8702760920AC936A00F9EE8F /* p2v_parameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8702760020AC936900F9EE8F /* p2v_parameters.cpp */; };
 		8702760A20AC936A00F9EE8F /* p2v.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8702760120AC936900F9EE8F /* p2v.cpp */; };
 		87F9356B20B20D02002D2B76 /* parse_tester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F9356A20B20D02002D2B76 /* parse_tester.cpp */; };
-		87F9357120B232DB002D2B76 /* p2v_input_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F9356F20B231B9002D2B76 /* p2v_input_reader.cpp */; };
 		87F9357420B23354002D2B76 /* p2v_input_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F9357320B23354002D2B76 /* p2v_input_reader.cpp */; };
+		87F9361320B4A3A2002D2B76 /* p2v_input_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F9361220B4A3A2002D2B76 /* p2v_input_reader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,10 +54,10 @@
 		8702760220AC936A00F9EE8F /* p2v.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v.h; path = ../../p2v.h; sourceTree = "<group>"; };
 		87F9356320B20CEF002D2B76 /* ip */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ip; sourceTree = BUILT_PRODUCTS_DIR; };
 		87F9356A20B20D02002D2B76 /* parse_tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = parse_tester.cpp; path = ../../parse_tester.cpp; sourceTree = "<group>"; };
-		87F9356E20B231B9002D2B76 /* p2v_input_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = p2v_input_reader.h; sourceTree = "<group>"; };
-		87F9356F20B231B9002D2B76 /* p2v_input_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p2v_input_reader.cpp; sourceTree = "<group>"; };
 		87F9357220B23353002D2B76 /* p2v_input_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = p2v_input_reader.h; path = ../../p2v_input_reader.h; sourceTree = "<group>"; };
 		87F9357320B23354002D2B76 /* p2v_input_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = p2v_input_reader.cpp; path = ../../p2v_input_reader.cpp; sourceTree = "<group>"; };
+		87F9361120B4A3A2002D2B76 /* p2v_input_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = p2v_input_reader.h; sourceTree = "<group>"; };
+		87F9361220B4A3A2002D2B76 /* p2v_input_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p2v_input_reader.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,9 +119,9 @@
 		87F9356420B20CEF002D2B76 /* ip */ = {
 			isa = PBXGroup;
 			children = (
-				87F9356F20B231B9002D2B76 /* p2v_input_reader.cpp */,
-				87F9356E20B231B9002D2B76 /* p2v_input_reader.h */,
 				87F9356A20B20D02002D2B76 /* parse_tester.cpp */,
+				87F9361220B4A3A2002D2B76 /* p2v_input_reader.cpp */,
+				87F9361120B4A3A2002D2B76 /* p2v_input_reader.h */,
 			);
 			path = ip;
 			sourceTree = "<group>";
@@ -217,7 +217,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				87F9357120B232DB002D2B76 /* p2v_input_reader.cpp in Sources */,
+				87F9361320B4A3A2002D2B76 /* p2v_input_reader.cpp in Sources */,
 				87F9356B20B20D02002D2B76 /* parse_tester.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
