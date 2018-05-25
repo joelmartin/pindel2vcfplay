@@ -22,7 +22,8 @@ timing;
 changes are:  
 revert to getline from the get loop  
 short-cut out of the more intense 'is this a summary line' check if the line can't be one  
-use fasta index file (.fai) ( pindel already requires one ) instead of walking through whole fasta.
+use fasta index file (.fai) ( pindel already requires one ) instead of walking through whole fasta.  
+index the pindel output during first pass over it, avoids re-reading whole thing for every new contig
  
  output identical, 95% of code identical but moved around so I could follow it.
  some cruft added to get xcode to shut up and because I'm terrible.
