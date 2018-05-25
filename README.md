@@ -1,12 +1,23 @@
 # pindel2vcfplay
 
-pindel2vcf for plant 30,000+ contig genomes, and normal genomes but most important for those
+pindel2vcf for messy genomes with lots of contigs/scaffolds, and normal genomes too.
 
-on a rice( kitaake v3 ) with just 58 contigs, speedup is
-3300 seconds ( pindel2vcf 0.6.3 )
-340  seconds ( pindel2vcf 0.6.0 - before the slowdowns were added )
-128 seconds  ( this version )
+timing;
+  kitaake - 12 chromosomes followed by 1300 scaffolds
+   v 0.6.3  56 minutes
+   v 0.6.0   5 minutes
+   v this   30 seconds
 
+  panicum - 9 chromosomes followed by 8400 scaffolds
+   result files pre-grepped for ChrID lines ( speedup more extreme for non-pre-grepped )
+   v 0.6.3  killed after 2 days, may try again for completeness
+   v 0.6.0  22 hours 46 minutes
+   v this   41 minutes
+
+  clostridium - 1 contig, 3.5mb
+   v 0.6.3 2 seconds
+   v 0.6.0 1 second
+   v this  1 second
 
 changes are:
   revert to getline from the get loop
